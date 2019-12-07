@@ -1,0 +1,164 @@
+Burbuja,20,100,30,0,Agua,Causa daño y tiene una probabilidad del 10% de bajar la velocidad
+Cascada,80,100,15,0,Agua,Causa daño
+Hidrobomba,120,80,5,0,Agua,Causa daño
+Martillazo,90,85,10,0,Agua,Causa daño con probabilidad de dar golpe critico(12.5%)
+Pistola de agua,40,100,25,0,Agua,Causa daño
+Rayo burbuja,65,100,20,0,Agua,Causa daño y tiene una probabilidad del 10% de bajar la velocidad
+Refugio,0,100,40,0,Agua,Aumenta la defensa en un nivel
+Surf,95,100,15,0,Agua,Causa daño
+Tenaza,35,75,15,0,Agua,Causa daño durante 2-5 turnos. Imposibilidad de atacar al objetivo
+Chupa vidas,20,100,15,0,Bicho,Causa daño y recupera el 50% PS quitados
+Disparo demora,0,95,40,0,Bicho,Baja la velocidad del objetivo
+Doble ataque,25,100,20,0,Bicho,Causa daño golpeando dos veces. Cada golpe tiene un 20% de probabilidad de envenenar.
+Pin misil,14,85,20,0,Bicho,Causa daño al objetivo de 2 a 5 veces
+Furia dragón,0,100,10,0,Dragón,Quita siempre 40 PS al obejtivo
+Impactrueno,40,100,30,0,Eléctrico,Causa daño y tiene una probabilidad del 10% de paralizar el objetivo.
+Onda trueno,0,100,20,0,Eléctrico,Paraliza el objetivo
+Puño trueno,75,100,35,0,Eléctrico,Causa daño y tiene un 10% de paralizar el objetivo
+Rayo,95,100,15,0,Eléctrico,Causa daño y tiene un 10% de paralizar el objetivo
+Trueno,120,70,10,0,Eléctrico,Causa daño y tiene un 10% de paralizar el objetivo
+Puño fuego,75,100,15,0,Eléctrico,Causa daño y tiene una probabilidad del 10% de quemar al objetivo
+Lenguetazo,20,100,30,0,Fantasma,Causa daño y tiene un 30% de paralizar el objetivo
+Rayo confuso,0,100,10,0,Fantasma,Confunde al objetivo
+Tinieblas,0,100,15,0,Fantasma,Resta la cantidad de PS equivalentes al nivel de usuario
+Ascuas,40,100,25,0,Fuego,Causa daño y tiene una probabilidad del 10% de quemar al objetivo
+Giro fuego,15,100,15,0,Fuego,Causa dañó de 2 a 5 turnos. Imposibilidad de atacar al objetivo
+Lanzallamas,95,100,15,0,Fuego,Causa daño y tiene una probabilidad del 10% de quemar al objetivo
+Llamarada,120,85,5,0,Fuego,Causa daño y tiene una probabilidad del 30% de quemar al objetivo
+Neblina,0,0,30,0,Hielo,Neblina evita durante 5 turnos otros pokemon puedan reducir las estadisiticas del equipo aliado
+Niebla,0,0,30,0,Hielo,Restaura todos los cambios tantos positivos como negativos en las estadisitcas de todos los pokemon.
+Puño hielo,75,100,15,0,Hielo,Causa daño y tiene una probabilidad del 10% de congelar al objetivo
+Rayo aurora,65,100,20,0,Hielo,Causa daño y tiene una probabilidad del 10% de bajar un nivel el ataque del objetivo
+Rayo hielo,95,100,10,0,Hielo,Causa daño y tiene una probabilidad del 10% de congelar al objetivo
+Ventisca,120,90,5,0,Hielo,Causa daño y tiene una probabilidad del 10% de congelar al objetivo
+Contraataque,0,100,20,-5,Lucha,Devuelve el doble daño recibido si es un físico
+Doble patada,30,100,30,0,Lucha,Causa daño golpeando 2 veces en un mismo turno
+Movimiento sísmico,0,100,20,0,Lucha,Resta la cantidad de PS equivalentes al nivel de usuario
+Patada baja,50,90,20,0,Lucha,Causa daño y tiene del 30% de retroceder al objetivo
+Patada giro,60,85,15,0,Lucha,Causa daño y tiene del 30% de retroceder al objetivo
+Patada salto,70,100,25,0,Lucha,Causa daño. Si falla el usuario se golpea a si mismo restandole 1 PS.
+Patada salto alta,85,90,20,0,Lucha,Causa daño. Si falla el usuario se golpea a si mismo restandole 1 PS.
+Sumisión,80,80,20,0,Lucha,Causa daño. Causa daño de retroceso al usuario de 1/4 del daño causado.
+Placaje,40,100,35,0,Normal,Causa daño
+Danza espada,0,100,30,0,Normal,Aumenta en dos niveles el ataque del usuario
+Afilar,0,100,30,0,Normal,sube el ataque del usuario en un nivel
+Agarre,55,100,30,0,Normal,Causa daño.
+Amortiguador,0,0,10,0,Normal,Restaura la mitad de los PS máximos del usuario
+Anulación,0,55,20,0,Normal,Anula un movimiento del objetivo
+Arañazo,40,100,35,0,Normal,Causa daño.
+Atadura,15,75,20,0,Normal,Causa daño de 2 a 5 turnos. Imposibilidad de atacar al objetivo
+Ataque arena,0,100,15,0,Normal,Baja la precisión en un nivel.
+Ataque furia,15,85,20,0,Normal,Causa daño de 2 a 5 turnos.
+Ataque rápido,40,100,30,1,Normal,Causa daño.
+Autodestrucción,130,100,5,0,Normal,Causa daño y debilita al usuario.
+Beso amoroso,0,75,10,0,Normal,Duerme al obejtivo
+Bomba huevo,100,75,10,0,Normal,Causa daño
+Bomba sónica,0,90,20,0,Normal,siempre quita 20 PS
+Cabezazo,100,100,15,0,Normal,Se prepara durante el primer turno y ataca en el segundo
+Canto,0,55,15,0,Normal,Duerme al objetivo.
+Chirrido,0,85,40,0,Normal,Baja en dos niveles la defensa del objetivo.
+Clavo cañón,20,100,15,0,Normal,Causa daño de 2 a 5 turnos.
+Conversión,0,0,30,0,Normal,Cambia el tipo del usuario del oponente
+Cornada,65,100,25,0,Normal,Causa daño.
+Corte,50,100,30,0,Normal,Causa daño.
+Cuchillada,70,100,20,0,Normal,Causa daño y tiene una alta probabilidad de causar un golpe crítico (12.5%).
+Derribo,90,85,20,0,Normal,Causa daño. Causa daño de retroceso al usuario de 1/4 del daño causado 
+Desarrollo,0,0,40,0,Normal,Aumenta en un nivel el especial del usuario.
+Deslumbrar,0,100,30,0,Normal,Provoca paralisis al objetivo.
+Destello,0,100,20,0,Normal,Baja un nivel la precisición del oponente.
+Destructor,40,100,35,0,Normal,Causa daño.
+Día de pago,40,100,20,0,Normal,Causa daño. Se esparcen monedas que se recogen al final del combate
+Doble equipo,0,0,15,0,Normal,Aumenta en un nivel la evasión del usuario.
+Doble filo,100,100,15,0,Normal,Causa daño. Causa daño de retroceso al usuario de 1/4 del daño causado.
+Doblebofetón,15,85,10,0,Normal,Causa daño de 2 a 5 turnos.
+Explosión,170,100,5,0,Normal,Causa daño y debilita al usuario.
+Foco energía,0,0,40,0,Normal,Aumenta la probabilidad asestar golpes criticos.
+Fortaleza,0,0,30,0,Normal,Aumenta en un nivel la defensa del usuario.
+Fuerza,80,100,15,0,Normal,Causa daño.
+Furia,20,100,20,0,Normal,Causa daño. No puede cambiar de movimiento.
+Golpe,90,100,20,0,Normal,Causa daño entre 3 o 4 turnos seguidos. El usuario termina confundido.
+Golpe cabeza,70,100,15,0,Normal,Causa daño y tiene una probabilidad del 30% de hacer retroceder.
+Golpe cuerpo,85,100,15,0,Normal,Causa daño y tiene una probabilidad del 30% de paralizar el objetivo.
+Golpe kárate,50,100,25,0,Normal,Causa daño y tiene un alto índice de golpe crítico.
+Golpes furia,50,100,15,0,Normal,Causa daño de 2 a 5 turnos.
+Gruñido,0,100,40,0,Normal,Baja un nivel el ataque del objetivo.
+Guillotina,0,30,5,0,Normal,Si acierta provoca KO en un turno.
+Hipercolmillo,80,90,15,0,Normal,Causa daño y tiene un una probabilidad del 10% de hacer retroceder al objetivo.
+Hiperrayo,150,90,5,0,Normal,Causa daño. No podra moverse en el segundo turno.
+Látigo,0,100,30,0,Normal,Baja en un nivel la defensa del oponente.
+Malicioso,0,100,30,0,Normal,Baja en un nivel la defensa del oponente.
+Megapatada,120,75,5,0,Normal,Causa daño.
+MegaPuño,80,85,20,0,Normal,Causa daño.
+Metrónomo,0,0,15,0,Normal,Utiliza un movimiento al azar.
+Mimético,0,0,25,0,Normal,Permite al usuario elegir uno de los movimientos del objetivo y copiarlo.
+Mordisco,60,100,25,0,Normal,Causa daño y tiene una probabilidad del 10% de hacer retroceder.
+Pantalla de humo,0,100,20,0,Normal,Baja en un nivel la precisión del oponente.
+Perforador,0,30,5,0,Normal,Si acierta provoca KO en un turno.
+Pisotón,65,100,20,0,Normal,Causa daño y tiene una probabilidad del 30% de hacer retroceder.
+Atizar,80,75,20,0,Normal,Causa daño.
+Presa,50,100,20,0,Normal,Causa daño de 2 a 5 turnos.
+Puño cometa,18,85,15,0,Normal,Causa daño de 2 a 5 turnos.
+Rapidez,60,0,20,0,Normal,Causa daño. No falla.
+Recuperación,0,0,20,0,Normal,Restaura la mitad de los PS máximos del usuario
+Reducción,0,0,10,0,Normal,Aumenta la evasión del usuario en un nivel.
+Remolino,0,85,20,0,Normal,Ahuyenta a los pokemon salvajes.
+Constricción,15,85,20,0,Normal,Causa daño de 2 a 5 turnos. Imposibilidad de atacar al objetivo
+Rizo de defensa,0,100,40,0,Normal,Aumenta en un nivel la defensa del usuario.
+Rugido,0,0,20,-6,Normal,Ahuyenta a los pokemon salvajes.
+Salpicadura,0,0,40,0,Normal,No tiene ningún efecto.
+Superdiente,0,90,10,0,Normal,Quita al objetivo la mitad de sus PS actuales.
+Supersónico,0,55,20,0,Normal,Confunde al objetivo.
+Sustituto,0,0,10,0,Normal,Crea un sustituo con el 25% de los PS maximos del usuario para que reciba el daño de los movimientos
+Tornado,40,100,35,0,Normal,Causa daño.
+Transformación,0,0,10,0,Normal,Convierte al usuario en el Pokémon objetivo copiando su tipo sus movimientos habilidad su ratio de captura sus estadísticas y cambios en las mismas.
+Triataque,80,100,10,0,Normal,Causa daño. Tiene un 20% de provocar quemaduras paralisis o congelación
+Venganza,0,0,10,0,Normal, Hace que el usuario se mantenga inmóvil durante 2-3 turnos seguidos sin poder realizar ninguna acción para después devolver el doble del daño recibido. El movimiento falla si el usuario no resulta dañado por el enemigo.
+Viento cortante,80,75,10,0,Normal,carga en el primer turno que es efectuado creando un remolino. En el segundo turno causa daño.
+Restricción,10,100,35,0,Normal,Restricción causa daño y tiene una probabilidad del 10% de bajar un nivel la velocidad del oponente.
+Puño mareo,70,100,10,0,Normal,Causa daño y tiene una probabilidad del 20% de confundir al objetivo.
+Absorber,20,100,20,0,Planta,Causa daño y el usuario recupera el 50% de los PS quitados por el movimiento al objetivo
+Danza pétalo,70,100,20,0,Planta,Causa daño entre 3 o 4 turnos seguidos. El usuario termina confundido.
+Drenadoras,0,90,10,0,Planta,Planta tres semillas en el oponente las cuales le roban 1/16 de sus PS máximos al final de cada turno. El usuario recupera esa misma cantidad de PS. Si el usuario es cambiado el Pokémon que pase a ocupar su lugar recibirá esos puntos de salud. El efecto se pasa al cambiar el Pokémon infectado por drenadoras. Drenadoras no afecta a Pokémon de tipo planta.
+Espora,0,100,15,0,Planta,Duerme al objetivo.
+Hoja afilada,55,95,25,0,Planta,Causa daño y tiene una alta probabilidad de dar un golpe crítico (12.5%).
+Látigo cepa,35,100,25,0,Planta,Causa daño.
+Megaagotar,45,100,15,0,Planta,Causa daño y el usuario recupera el 50% de los PS quitados por el movimiento al objetivo
+Paralizador,0,75,30,0,Planta,Paraliza al objetivo
+Rayo solar,120,100,10,0,Planta,utiliza este movimiento concentra la energía solar un turno para liberar un rayo que causa daño en el siguiente turno.
+Somnífero,0,75,15,0,Planta,Duerme al objetivo
+Agilidad,0,0,30,0,Psíquico,Sube en dos niveles la velocidad del usuario.
+Amnesia,0,0,20,0,Psíquico,Aumenta en dos niveles el especial del usuario
+Barrera,0,0,30,0,Psíquico,Aumneta en dos niveles la defensa del usuario.
+Comesueños,100,100,15,0,Psíquico,Causa daño a un objetivo dormido y el usuario recupera el 50% de los PS quitados por movimiento al objetivo.
+Confusión,50,100,25,0,Psíquico,Causa daño y tiene una probabilidad del 10% de confundir al objetivo.
+Descanso,0,0,10,0,Psíquico,hace que el usuario se duerma y recupere la totalidad de los PS curando en el proceso cualquier problema de estado. El usuario después permanece dormido durante 2 turnos.
+Hipnosis,0,60,20,0,Psíquico,Duerme al objetivo.
+Kinético,0,80,15,0,Psíquico,Baja la precisión del objetivo en un nivel.
+Meditación,0,0,40,0,Psíquico,aumenta un nivel el ataque del usuario.
+Pantalla de luz,0,0,30,0,Psíquico,Dobla la defensa especial del usuario.
+Psicoonda,0,80,15,0,Psíquico,Causa un daño variable al oponente elegido al azar de un número entre 0.5 y 1.5 veces el nivel del usuario.
+Psicorrayo,65,60,20,0,Psíquico,Causa daño y tiene una probabilidad del 10% de confundir al objetivo.
+Psíquico,90,100,20,0,Psíquico,Causa daño y tiene una probabilidad del 30% de bajar en un nivel el especial del objetivo.
+Reflejo,0,0,20,0,Psíquico,Dobla la defensa física del usuario.
+Teletransporte,0,0,20,0,Psíquico,Permite huir de combates individuales.
+Avalancha,75,90,10,0,Roca,Causa daño.
+Lanzarocas,50,65,15,0,Roca,Causa daño.
+Excavar,100,100,10,0,Tierra,Cava en el primer turno y el segundo turno ataca.
+Fisura,0,30,5,0,Tierra,Si acierta provoca un golpe fulminante.
+Hueso palo,65,85,20,0,Tierra,Causa daño y tiene una probabilidad del 10% de hacer retroceder al objetivo.
+Huesomerang,50,90,10,0,Tierra,Causa daño golpeando al objetivo en un mismo turno.
+Terremoto,100,100,10,0,Tierra,Causa daño.
+Ácido,40,100,30,0,Veneno,Causa daño y tiene una probabilidad deñ 10% de bajar un nivel la defensa del objetivo.
+Armadura ácida,0,0,20,0,Veneno,Sube en dos niveles la defensa del usuario.
+Gas venenoso,0,55,40,0,Veneno,Envenena al objetivo
+Picotazo venenoso,15,100,35,0,Veneno,Causa daño y tiene una probabilidad del 30% de envenenar al oponente.
+Polución,20,70,20,0,Veneno,Causa daño y tiene una probabilidad del 40% de envenar al objetivo.
+Polvo veneno,0,75,35,0,Veneno,Envenena al objetivo
+Residuos,65,100,20,0,Veneno,Causa daño y tiene una probabilidad del 30% de envenenar al objetivo.
+Tóxico,0,85,10,0,Veneno,provoca un grave envenenamiento que se agrava con el paso de los turnos.
+Ataque aéreo,140,90,5,0,Volador,Se prepara durante el primer turno. En el segundo turno causa daño al objetivo.
+Ataque ala,35,100,35,0,Volador,Causa daño.
+Movimiento espejo,0,0,20,0,Volador,Utiliza el último ataque usado que haya tenido al usuario por objetivo. 
+Pico taladro,80,100,20,0,Volador,Causa daño.
+Picotazo,35,100,35,0,Volador,Causa daño.
+Vuelo,70,100,15,0,Volador, emplea dos turnos: en el primero el Pokémon vuela muy alto tanto que estará fuera del alcance de la mayoría de los movimientos. En el segundo turno ocurre la caída del vuelo en la cual el Pokémon golpea al oponente pero puede ser interrumpida de muchas maneras.

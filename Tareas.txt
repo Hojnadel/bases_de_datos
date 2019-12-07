@@ -1,0 +1,3 @@
+replay (tabla log)
+status / pifiar ataque
+weaknesses

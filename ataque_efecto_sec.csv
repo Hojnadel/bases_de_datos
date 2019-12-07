@@ -1,0 +1,42 @@
+Burbuja,Bajar velocidad,10.0
+Martillazo,Bajar velocidad,12.5
+Rayo burbuja,Bajar velocidad,10.0
+Restricción,Bajar velocidad,10.0
+Cuchillada,Probabilidad de critico,12.5
+Golpe kárate,Probabilidad de critico,12.5
+Hoja afilada,Probabilidad de critico,12.5
+Tenaza,Imposibilidad de atacar,100.0
+Giro fuego,Imposibilidad de atacar,100.0
+Constricción,Imposibilidad de atacar,100.0
+Doble ataque,Envenenamiento leve,20.0
+Picotazo venenoso,Envenenamiento leve,30.0
+Polución,Envenenamiento leve,40.0
+Residuos,Envenenamiento leve,30.0
+Impactrueno,Paralizar,10.0
+Puño trueno,Paralizar,10.0
+Rayo,Paralizar,10.0
+Trueno,Paralizar,10.0
+Lenguetazo,Paralizar,30.0
+Golpe cuerpo,Paralizar,30.0
+Triataque,Paralizar,20.0
+Ascuas,Quemar,10.0
+Lanzallamas,Quemar,10.0
+Llamarada,Quemar,30.0
+Puño fuego,Quemar,10.0
+Triataque,Quemar,20.0
+Puño hielo,Congelar,10.0
+Triataque,Congelar,20.0
+Rayo aurora,Bajar ataque,10.0
+Rayo hielo,Congelar,10.0
+Ventisca,Congelar,10.0
+Patada baja,Retroceso,30.0
+Patada giro,Retroceso,30.0
+Golpe cabeza,Retroceso,30.0
+Hipercolmillo,Retroceso,10.0
+Mordisco,Retroceso,10.0
+Pisotón,Retroceso,30.0
+Psicorrayo,Confusión,10.0
+Puño mareo,Confusión,20.0
+Psíquico,Bajar especial,30.0
+Ácido,Bajar especial,10.0
+Hueso palo,Bajar defensa,10.0
