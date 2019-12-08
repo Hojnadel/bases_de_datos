@@ -37,7 +37,7 @@ Dragón,Fuego,1
 Dragón,Hielo,1
 Dragón,Lucha,1
 Dragón,Normal,1
-Dragón,Planta,,1
+Dragón,Planta,1
 Dragón,Psíquico,1
 Dragón,Roca,1
 Dragón,Tierra,1
@@ -103,7 +103,7 @@ Hielo,Roca,1
 Hielo,Tierra,2
 Hielo,Veneno,1
 Hielo,Volador,2
-Lucha,Agua,,1
+Lucha,Agua,1
 Lucha,Bicho,0.5
 Lucha,Dragón,1
 Lucha,Eléctrico,1

@@ -130,16 +130,16 @@ class Pokemon():
 			print('{}) {}'.format(n+1, self.att[n].name))
 
 	# Devuelve True si el pokemon puede atacar, False eoc.
-	def check_status(self):
+	def check_status(self, def_pk):
 		
 		if(self.status == "ok"):
 			return True
 
 		elif(self.status == "sleep"):
-			delay_print(self.name, "is fast asleep...")
+			delay_print("{} is fast asleep...".format(self.name))
 			if(self.sleep_counter == 0):
 				self.status = "ok"
-				delay_print(self.name, "woke up!")
+				delay_print("{} woke up!".format(self.name))
 				return True
 			self.sleep_counter -= 1
 			return False
@@ -148,14 +148,14 @@ class Pokemon():
 			if(randint(1,4) == 1):
 				return True
 			else:
-				print(self.name," is fully paralyzed.")
+				print("{} is fully paralyzed.".format(self.name))
 				return False
 
 		elif(self.status == "confused"):
-			delay_print(self.name," is confused...")
+			delay_print("{} is confused...".format(self.name))
 			if(self.confusion_counter == 0):
 				self.status = "ok"
-				print(self.name, "is no more confused!")
+				print("{} is no more confused!".format(self.name))
 				return True
 			self.confusion_counter -= 1
 			if(randint(1,2) == 1):
@@ -171,17 +171,22 @@ class Pokemon():
 			## COMO POR EJEMPLO BAJAR LA VELOCIDAD EN EL CASO DE LA PARÁLISIS
 
 		elif(self.status == "poisoned"):
-			delay_print(self.name, " is poisoned...")
+			delay_print("{} is poisoned...".format(self.name))
 			self.curr_hp -= math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
 			self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp
 			self.calculate_health_bars()
+			self.print_health_bars()
+			def_pk.print_health_bars()
+
 			return True
 
 		elif(self.status == "burned"):
-			delay_print(self.name, " is burned...")
+			delay_print("{} is burned...".format(self.name))
 			self.curr_hp -= math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
 			self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp
 			self.calculate_health_bars()
+			self.print_health_bars()
+			def_pk.print_health_bars()
 			return True
 
 		elif(self.status == "frozen"):
@@ -200,7 +205,7 @@ class Pokemon():
 		#https://bulbapedia.bulbagarden.net/wiki/Damage
 		#https://bulbapedia.bulbagarden.net/wiki/Critical_hit#In_Generation_I
 		
-		if (self.check_status() == False):
+		if (self.check_status(def_pk) == False):
 			return
 
 		att_index = int(num)-1						# Calculo el índice de la lista de ataques: -1 a lo que ingresó el usuario
@@ -271,7 +276,7 @@ class Pokemon():
 
 			def_pk.calculate_health_bars()					# Actualizo las barras de HP del pokemon a la defensa
 
-			if(self.att[att_index].secEffect != "None"):
+			if(self.att[att_index].secEffect != "None" and type_mod != 0):
 				print("entre al if de secondary effect porque no es NONE")
 				self.att[att_index].secEffect_methode(def_pk)
 			else:
@@ -320,11 +325,11 @@ class Attack():
 		self.secEffectProb = prob
 
 	def secEffect_methode(self, def_pk):
-		if (def_pk.status != "ok"):
-			print("el pokemon a la defensa ya está en algún estado")
+		if (def_pk.status != "ok" and self.secEffect != "None"):
+			print("{} doesn't have any secondary effect... {} is alredy {}".format(self.name, def_pk.name, def_pk.status))
 			return
 
-		if(randint(0,99) < self.secEffectProb):
+		if(randint(0,99) < self.secEffectProb or self.secEffectProb == 0.0):
 
 			if(self.secEffect == "Paralizar"):
 				print("el efecto fue paralizar")
@@ -346,7 +351,15 @@ class Attack():
 			elif(self.secEffect == "Confusión"):
 				print("El efecto secundario fue confundir")
 				def_pk.status = "confused"
+				def_pk.confusion_counter = randint(1,4)
+				print("Quedará confundido {} turnos",format(def_pk.confusion_counter))
 
+
+			elif(self.secEffect == "Dormir"):
+				print("El efecto secundario fue dormir")
+				def_pk.status = "sleep"
+				def_pk.sleep_counter = randint(1,7)
+				print("Quedará dormido {} turnos",format(def_pk.sleep_counter))
 
 
 def choose_pokemon(cur):
@@ -538,7 +551,7 @@ if __name__ == '__main__':
 		CLR_SCRN()
 		print("*----------INFORMACION DE LOS ATAQUES----------*")
 		for i in range(NUM_ATTACKS):
-			mypokemon.att[i].print_info_attack()
+			otherpokemon.att[i].print_info_attack()
 		print("*----------INFORMACION DEL POKEMON----------*")	
 		otherpokemon.print_pokemon_info()
 
@@ -689,10 +702,14 @@ if __name__ == '__main__':
 
 
 
-			input()
 			turn +=1
 
 		# Anunciando al ganador
+		if(mypokemon.curr_hp<=0):
+			delay_print("{} has fainted!".format(mypokemon.name))
+		else:
+			delay_print("{} has fainted!".format(otherpokemon.name))
+		time.sleep(1)
 		# pygame.mixer.music.stop()
 		# pygame.mixer.music.load("145 - ending.mp3")
 		# pygame.mixer.music.play()

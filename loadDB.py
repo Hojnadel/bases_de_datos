@@ -36,6 +36,7 @@ if __name__ == '__main__':
 	cur.execute("DROP DATABASE if exists myPokemonDB")
 	cur.execute("CREATE DATABASE myPokemonDB")
 	print("\n[INFO] | Base de datos \"myPokemonDB\" creada")
+
 	cur.execute("USE myPokemonDB")
 	print("[INFO] | Usando base de datos myPokemonDB")
 
@@ -45,6 +46,7 @@ if __name__ == '__main__':
 	cur.execute("DROP TABLE if exists dmgType")
 	cur.execute("DROP TABLE if exists attack")
 	cur.execute("DROP TABLE if exists secEffect")
+	cur.execute("DROP TABLE if exists attackEffectiveness")
 
 	cur.execute("DROP TABLE if exists pokemon_type")
 	cur.execute("DROP TABLE if exists pokemon_attack")
@@ -113,11 +115,26 @@ if __name__ == '__main__':
 			prob float NOT NULL)	''')
 	print("[INFO] | Tabla \"attack_secEffect\" creada")
 
+	print("[INFO] | Creando tabla \"attackEffectiveness\"")
+	cur.execute('''CREATE TABLE if not exists attackEffectiveness
+		(	attackTypeID int NOT NULL,
+			pokemonTypeID int NOT NULL,
+			multiplier float NOT NULL)	''')
+	print("[INFO] | Tabla \"attackEffectiveness\" creada")
+
 
 	#Estableciendo Foreign keys
 	print("[INFO] | Estableciendo Foreign Keys")
 	cur.execute('''ALTER TABLE type ADD CONSTRAINT FK_type_dmgType
 					FOREIGN KEY (dmgTypeID) REFERENCES dmgType(dmgTypeID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
+	cur.execute('''ALTER TABLE attackEffectiveness ADD CONSTRAINT FK_attackType
+					FOREIGN KEY (attackTypeID) REFERENCES type(typeID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
+	cur.execute('''ALTER TABLE attackEffectiveness ADD CONSTRAINT FK_pokemonType
+					FOREIGN KEY (pokemonTypeID) REFERENCES type(typeID)
 					ON DELETE NO ACTION ON UPDATE NO ACTION''')
 
 	cur.execute('''ALTER TABLE pokemon_type ADD CONSTRAINT FK_pok_type_pokemon
@@ -302,7 +319,6 @@ if __name__ == '__main__':
 	conn.commit()
 	print("[INFO] | Datos de la tabla \"pokemon_attack\" insertados")
 
-
 	### CARGO LA TABLA attack_secEffect ###
 	print("[INFO] | Cargando datos de la tabla \"attack_secEffect\"")
 	attackinfo = []
@@ -332,6 +348,34 @@ if __name__ == '__main__':
  					'''.format(cols[0],cols[1],cols[2],n[0],n[1],n[2]))
 	conn.commit()	
 	print("[INFO] | Datos de la tabla \"attack_secEffect\" insertados")
+
+
+	### CARGO LA TABLA attackEffectiveness ###
+	print("[INFO] | Cargando datos de la tabla \"attackEffectiveness\"")
+	qry = []
+	cur.execute("SELECT typeID, name FROM type")
+	qry = cur.fetchall()
+
+	datos = load_csv2("attacks_effectiveness.csv", datos)
+	i = 0
+	for d in datos:
+		for t in qry:
+			if (d[0] == t[1]):
+				datos[i][0] = t[0]
+			if (d[1] == t[1]):
+				datos[i][1] = t[0]
+		datos[i][2] = float(datos[i][2])
+		i+=1
+	cur.execute("SHOW COLUMNS FROM attackEffectiveness");
+	aux = cur.fetchall();
+	cols = load_cols_name(aux)
+	
+	for n in datos:
+		cur.execute('''INSERT INTO attackEffectiveness ({},{},{}) 
+ 						VALUES ({},{},{});
+ 					'''.format(cols[0],cols[1],cols[2],n[0],n[1],n[2]))
+	conn.commit()	
+	print("[INFO] | Datos de la tabla \"attackEffectiveness\" insertados")
 
 	print("[INFO] | Database ready")
 
