@@ -136,44 +136,76 @@ class Pokemon():
 			return True
 
 		elif(self.status == "sleep"):
+			delay_print(self.name, "is fast asleep...")
 			if(self.sleep_counter == 0):
 				self.status = "ok"
+				delay_print(self.name, "woke up!")
 				return True
-			self.sleep_counter--
+			self.sleep_counter -= 1
 			return False
 
 		elif(self.status == "paralyzed"):
 			if(randint(1,4) == 1):
 				return True
 			else:
+				print(self.name," is fully paralyzed.")
 				return False
 
 		elif(self.status == "confused"):
+			delay_print(self.name," is confused...")
 			if(self.confusion_counter == 0):
 				self.status = "ok"
+				print(self.name, "is no more confused!")
 				return True
-			self.confusion_counter--
+			self.confusion_counter -= 1
 			if(randint(1,2) == 1):
-				return True
-			return False
+				delay_print("It hurts itself in its confusion!")
+				self.curr_hp -= math.floor(((((2*self.lvl/5+2)*40*(self.str/self.df))/50)+2)) 		# Se daña como si fuese atacado
+				self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp								# por un ataque de PWR 40 y daño
+				self.calculate_health_bars() 														# físico, sin modificadores
+				return False
+			return True
 
 			## COMENTARIOS: ESTA FUNCION SOLO CHEQUEA EL ESTADO. DESPUES, ANTES DE CADA ATAQUE, SI DEVOLVIÓ FALSE TENGO QUE VER
 			## LA CUASA Y HACER COSAS DISTINTAS. CUADNO EL POKEMON OBTIENE EL ESTADO, AHÍ HACER LAS COSAS QUE OCURREN UNA SOLA VEZ
 			## COMO POR EJEMPLO BAJAR LA VELOCIDAD EN EL CASO DE LA PARÁLISIS
 
 		elif(self.status == "poisoned"):
+			delay_print(self.name, " is poisoned...")
+			self.curr_hp -= math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
+			self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp
+			self.calculate_health_bars()
+			return True
 
 		elif(self.status == "burned"):
+			delay_print(self.name, " is burned...")
+			self.curr_hp -= math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
+			self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp
+			self.calculate_health_bars()
+			return True
 
 		elif(self.status == "frozen"):
+			delay_print(self.name, " is frozen solid...")
+			if(randint(1,10) == 1):
+				delay_print(self.name," is no more frozen!")
+				self.status = "ok"
+				return True
+			else:
+				return False
+
+
+
 
 	def do_attack(self, num, def_pk, weaknesses_table, reply_table):
 		#https://bulbapedia.bulbagarden.net/wiki/Damage
 		#https://bulbapedia.bulbagarden.net/wiki/Critical_hit#In_Generation_I
 		
+		if (self.check_status() == False):
+			return
+
 		att_index = int(num)-1						# Calculo el índice de la lista de ataques: -1 a lo que ingresó el usuario
 
-		if(self.att[att_index].acc != 0 and self.att[att_index].acc > randint(0,99)):
+		if(self.att[att_index].acc == 0 or self.att[att_index].acc > randint(0,99)):
 
 			att_type = self.att[att_index].tipo 		# Tipo del ataque elegido
 			def_pk_type1 = def_pk.tipo1 				# Tipo 1 del pokemon a la defensa
@@ -213,10 +245,7 @@ class Pokemon():
 
 			modifier = random_mod * stab_mod * type_mod * crit_mod 	# Modificador total de daño
 			
-			dmg = 0
-			if(pwr != 0):
-				print("Entre al if del pwr: ",pwr)
-				dmg = math.ceil(((((2*lvl/5+2)*pwr*(A/D))/50)+2)*modifier) 	# Cálculo del daño: https://bulbapedia.bulbagarden.net/wiki/Damage
+			dmg = 0 if pwr == 0 else math.floor(((((2*lvl/5+2)*pwr*(A/D))/50)+2)*modifier) 	# Cálculo del daño: https://bulbapedia.bulbagarden.net/wiki/Damage
 			
 			print("\n---Debugging Info---")
 			print("Tipo ataque: {}	DefPok tipo1: {}	DefPok tipo2: {}".format(att_type, def_pk_type1, def_pk_type2))
@@ -240,18 +269,28 @@ class Pokemon():
 			if(def_pk.curr_hp < 0):
 				def_pk.curr_hp = 0
 
-			hp_per_bar = def_pk.hp / 20 					# Actualizo las barras de HP del pokemon a la defensa
-			cant_bars = math.ceil(def_pk.curr_hp / hp_per_bar)
-			aux_bars = ""
-			for i in range(20):
-				if i < cant_bars:
-					aux_bars += '='
-				else:
-					aux_bars += '_'
-			def_pk.hp_bars = aux_bars
+			def_pk.calculate_health_bars()					# Actualizo las barras de HP del pokemon a la defensa
+
+			if(self.att[att_index].secEffect != "None"):
+				print("entre al if de secondary effect porque no es NONE")
+				self.att[att_index].secEffect_methode(def_pk)
+			else:
+				print("no tiene efecto secundario")
 
 		else:
 			delay_print("\n{} has failed...".format(self.att[att_index].name))
+
+	
+	def calculate_health_bars(self):
+		hp_per_bar = self.hp / 20 					
+		cant_bars = math.ceil(self.curr_hp / hp_per_bar)
+		aux_bars = ""
+		for i in range(20):
+			if i < cant_bars:
+				aux_bars += '='
+			else:
+				aux_bars += '_'
+		self.hp_bars = aux_bars
 
 class Attack():
 
@@ -279,6 +318,35 @@ class Attack():
 	def load_secEffect(self, secEff, prob):
 		self.secEffect = secEff
 		self.secEffectProb = prob
+
+	def secEffect_methode(self, def_pk):
+		if (def_pk.status != "ok"):
+			print("el pokemon a la defensa ya está en algún estado")
+			return
+
+		if(randint(0,99) < self.secEffectProb):
+
+			if(self.secEffect == "Paralizar"):
+				print("el efecto fue paralizar")
+				def_pk.status = "paralyzed"
+				def_pk.spd *= 0.25
+
+			elif(self.secEffect == "Envenenamiento leve"):
+				print("el efecto fue envenenar")
+				def_pk.status = "poisoned"
+
+			elif(self.secEffect == "Quemar"):
+				print("El efecto secundario fue quemar")
+				def_pk.status = "burned"
+
+			elif(self.secEffect == "Congelar"):
+				print("El efecto secundario fue congelar")
+				def_pk.status = "frozen"
+
+			elif(self.secEffect == "Confusión"):
+				print("El efecto secundario fue confundir")
+				def_pk.status = "confused"
+
 
 
 def choose_pokemon(cur):
