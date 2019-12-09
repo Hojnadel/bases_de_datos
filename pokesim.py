@@ -11,16 +11,15 @@ from art import tprint
 
 NUM_ATTACKS = 2
 
+# Imprimir un caracter a la vez con delay
 def delay_print(s):
-    # print one character at a time
-    # https://stackoverflow.com/questions/9246076/how-to-print-one-character-at-a-time-on-one-line
     for c in s:
         sys.stdout.write(c)
         sys.stdout.flush()
         time.sleep(0.025)
     print('')
 
-
+# Pantalla pre-pelea
 def figth_screen():
 	time.sleep(1.5)
 	for n in range(5):
@@ -29,6 +28,7 @@ def figth_screen():
 		tprint("FIGHT")
 		time.sleep(0.5)
 
+# Pantalla de fin de pelea
 def battle_end_screen(p1, p2):
 	time.sleep(1.5)
 	if(p1.curr_hp == 0):
@@ -44,6 +44,7 @@ def battle_end_screen(p1, p2):
 		time.sleep(0.5)
 	input("\n\n\n\n\nApruebenmé!")
 
+# Función para cargar un archivo CSV
 def load_csv(csv_route):
 	datos = []
 	f = open(csv_route)
@@ -55,12 +56,15 @@ def load_csv(csv_route):
 	        datos[n][k]=datos[n][k].rstrip().lstrip()
 	return datos
 
+# Función para limpiar la pantalla de la consola
 def CLR_SCRN(*args):
 	print('\033c')
 	for n in args:
 		print(n)
 
 
+
+# Clase Pokemon
 class Pokemon():
 
 	def __init__(self, num, name, hp, frc, df, spc, spd):
@@ -91,6 +95,7 @@ class Pokemon():
 		self.sleep_counter = 0
 		self.confusion_counter = 0
 
+	# Método de Pokemon para cargarle los ataques reciviendo un vector con los números de ataque
 	def load_attacks(self, vect, cur, secEffect_table):
 		at = []
 		for i in range(len(vect)):
@@ -104,11 +109,13 @@ class Pokemon():
 				if(line[0] == vect[i]):
 					self.att[i].load_secEffect(line[2], line[3])
 
+	# Método de Pokemon para cargar su/s tipo/s
 	def load_pokemon_type(self, vect):
 		self.tipo1 = vect[0][1]
 		if (len(vect)==2):
 			self.tipo2 = vect[1][1]
 
+	# Método de Pokemon para impormir por consola su información
 	def print_pokemon_info(self):
 
 		if(self.att == []):
@@ -119,17 +126,19 @@ class Pokemon():
 				'''.format(self.num, self.name, self.tipo1, self.tipo2, self.hp, self.str, self.df, self.spc, self.spd,
 					self.att[0].name, self.att[1].name))
 
+	# Método de Pokemon para imprimir sus barras de vida
 	def print_health_bars(self):
-		delay_print('----------{}----------'.format(self.name))
+		delay_print('\n----------{}----------'.format(self.name))
 		delay_print('{}'.format(self.hp_bars))
 		delay_print('HP:{}/{}'.format(self.curr_hp, self.hp))
 		print('')
 
+	# Método de Pokemon para listar sus ataques
 	def show_attacks(self):
 		for n in range(len(self.att)):
 			print('{}) {}'.format(n+1, self.att[n].name))
 
-	# Devuelve True si el pokemon puede atacar, False eoc.
+	# Método de Pokemon para saber si puede atacar debido a algún estado. Devuelve True si el pokemon puede atacar, False eoc.
 	def check_status(self, def_pk):
 		
 		if(self.status == "ok"):
@@ -145,7 +154,7 @@ class Pokemon():
 			return False
 
 		elif(self.status == "paralyzed"):
-			if(randint(1,4) == 1):
+			if(randint(1,4) == 1): 										# 1/4 de chances de poer atacar
 				return True
 			else:
 				print("{} is fully paralyzed.".format(self.name))
@@ -165,10 +174,6 @@ class Pokemon():
 				self.calculate_health_bars() 														# físico, sin modificadores
 				return False
 			return True
-
-			## COMENTARIOS: ESTA FUNCION SOLO CHEQUEA EL ESTADO. DESPUES, ANTES DE CADA ATAQUE, SI DEVOLVIÓ FALSE TENGO QUE VER
-			## LA CUASA Y HACER COSAS DISTINTAS. CUADNO EL POKEMON OBTIENE EL ESTADO, AHÍ HACER LAS COSAS QUE OCURREN UNA SOLA VEZ
-			## COMO POR EJEMPLO BAJAR LA VELOCIDAD EN EL CASO DE LA PARÁLISIS
 
 		elif(self.status == "poisoned"):
 			delay_print("{} is poisoned...".format(self.name))
@@ -198,18 +203,21 @@ class Pokemon():
 			else:
 				return False
 
-
-
-
+	# Método de Pokemon para realizar un ataque (daño y efectos)
 	def do_attack(self, num, def_pk, weaknesses_table, reply_table):
 		#https://bulbapedia.bulbagarden.net/wiki/Damage
 		#https://bulbapedia.bulbagarden.net/wiki/Critical_hit#In_Generation_I
 		
+		att_index = num-1						# Calculo el índice de la lista de ataques: -1 a lo que ingresó el usuario
+
+		delay_print("{} used {}!\n".format(self.name, self.att[att_index].name))
+		
 		if (self.check_status(def_pk) == False):
 			return
 
-		att_index = int(num)-1						# Calculo el índice de la lista de ataques: -1 a lo que ingresó el usuario
 
+		#print("[DEBUG] | {} accuracy: {}".format(self.att[att_index].name, self.att[att_index].acc))
+		
 		if(self.att[att_index].acc == 0 or self.att[att_index].acc > randint(0,99)):
 
 			att_type = self.att[att_index].tipo 		# Tipo del ataque elegido
@@ -252,13 +260,13 @@ class Pokemon():
 			
 			dmg = 0 if pwr == 0 else math.floor(((((2*lvl/5+2)*pwr*(A/D))/50)+2)*modifier) 	# Cálculo del daño: https://bulbapedia.bulbagarden.net/wiki/Damage
 			
-			print("\n---Debugging Info---")
-			print("Tipo ataque: {}	DefPok tipo1: {}	DefPok tipo2: {}".format(att_type, def_pk_type1, def_pk_type2))
-			print("LVL: {}\nSpeed: {}\nPWR: {}\nA: {}\nD: {}".format(lvl,pk_base_speed,pwr,A,D))
-			print("Tipo del ataque: {}	Tipo1 del pokemon: {}	Tipo2 del pokemon: {}	STAB_mod: {}".format(att_type, self.tipo1, self.tipo2, stab_mod))
-			print("Random: {}	Stab: {}	Type: {}	Crit: {}	Modifier: {}".format(random_mod, stab_mod, type_mod, crit_mod, modifier))
-			print('Daño: ',dmg)
-			print("--------------------\n")
+			# print("\n---Debugging Info---")
+			# print("Tipo ataque: {}	DefPok tipo1: {}	DefPok tipo2: {}".format(att_type, def_pk_type1, def_pk_type2))
+			# print("LVL: {}\nSpeed: {}\nPWR: {}\nA: {}\nD: {}".format(lvl,pk_base_speed,pwr,A,D))
+			# print("Tipo del ataque: {}	Tipo1 del pokemon: {}	Tipo2 del pokemon: {}	STAB_mod: {}".format(att_type, self.tipo1, self.tipo2, stab_mod))
+			# print("Random: {}	Stab: {}	Type: {}	Crit: {}	Modifier: {}".format(random_mod, stab_mod, type_mod, crit_mod, modifier))
+			# print('Daño: ',dmg)
+			# print("--------------------\n")
 
 			if(type_mod == 0):
 				delay_print("It doesn't have effect...")
@@ -277,15 +285,15 @@ class Pokemon():
 			def_pk.calculate_health_bars()					# Actualizo las barras de HP del pokemon a la defensa
 
 			if(self.att[att_index].secEffect != "None" and type_mod != 0):
-				print("entre al if de secondary effect porque no es NONE")
+				#print("[DEBUG] | Entre al if de secondary effect porque no es NONE")
 				self.att[att_index].secEffect_methode(def_pk)
-			else:
-				print("no tiene efecto secundario")
+			#else:
+				#print("[DEBUG] | No tiene efecto secundario")
 
 		else:
-			delay_print("\n{} has failed...".format(self.att[att_index].name))
+			delay_print("\n{} has failed...\n".format(self.att[att_index].name))
 
-	
+	# Método de Pokemon para calcular las barras de vida
 	def calculate_health_bars(self):
 		hp_per_bar = self.hp / 20 					
 		cant_bars = math.ceil(self.curr_hp / hp_per_bar)
@@ -297,6 +305,8 @@ class Pokemon():
 				aux_bars += '_'
 		self.hp_bars = aux_bars
 
+
+# Clase Attack
 class Attack():
 
 	def __init__(self, at_id, name, pwr, pp, acc, prior, tipo, description, dt):
@@ -315,53 +325,56 @@ class Attack():
 		self.dt = dt
 		self.curr_pp = pp
 
-
+	# Método de Attack para imprimir la información de un ataque
 	def print_info_attack(self):
 		print('''\n#Ataque ID: {}\nNombre del ataque: {}\nPotencia: {}\nPP: {}\nEfectividad: {}\nTipo: {}\nDescripcion: {}\nTipo de daño: {}\nEfecto secundario: {}\nProbabilidad de efecto secundario: {}\n'''.format(self.id,
 			self.name, self.pwr, self.pp, self.acc, self.tipo, self.description, self.dt, self.secEffect, self.secEffectProb))
 
+	# Método de Attack para carga el efecto secundario de un ataque
 	def load_secEffect(self, secEff, prob):
 		self.secEffect = secEff
 		self.secEffectProb = prob
 
+	# Método de Attack para aplicar los efectos secundarios de un ataque
 	def secEffect_methode(self, def_pk):
 		if (def_pk.status != "ok" and self.secEffect != "None"):
-			print("{} doesn't have any secondary effect... {} is alredy {}".format(self.name, def_pk.name, def_pk.status))
+			#print("[DEBUG] | {} is alredy {}".format(def_pk.name, def_pk.status))
 			return
 
 		if(randint(0,99) < self.secEffectProb or self.secEffectProb == 0.0):
 
 			if(self.secEffect == "Paralizar"):
-				print("el efecto fue paralizar")
+				#print("[DEBUG] | el efecto fue paralizar")
 				def_pk.status = "paralyzed"
 				def_pk.spd *= 0.25
 
 			elif(self.secEffect == "Envenenamiento leve"):
-				print("el efecto fue envenenar")
+				#print("[DEBUG] | el efecto fue envenenar")
 				def_pk.status = "poisoned"
 
 			elif(self.secEffect == "Quemar"):
-				print("El efecto secundario fue quemar")
+				#print("[DEBUG] | El efecto secundario fue quemar")
 				def_pk.status = "burned"
 
 			elif(self.secEffect == "Congelar"):
-				print("El efecto secundario fue congelar")
+				#print("[DEBUG] | El efecto secundario fue congelar")
 				def_pk.status = "frozen"
 
 			elif(self.secEffect == "Confusión"):
-				print("El efecto secundario fue confundir")
+				#print("[DEBUG] | El efecto secundario fue confundir")
 				def_pk.status = "confused"
 				def_pk.confusion_counter = randint(1,4)
-				print("Quedará confundido {} turnos",format(def_pk.confusion_counter))
+				#print("[DEBUG] | Quedará confundido {} turnos",format(def_pk.confusion_counter))
 
 
 			elif(self.secEffect == "Dormir"):
-				print("El efecto secundario fue dormir")
+				#print("[DEBUG] | El efecto secundario fue dormir")
 				def_pk.status = "sleep"
 				def_pk.sleep_counter = randint(1,7)
-				print("Quedará dormido {} turnos",format(def_pk.sleep_counter))
+				#print("[DEBUG] | Quedará dormido {} turnos",format(def_pk.sleep_counter))
 
 
+# Función del menú para elegir un Pokemon
 def choose_pokemon(cur):
 	qry_res = []
 	cur.execute("SELECT pokenum, name FROM pokemon")							# Query que muestra todos los Pokemon
@@ -415,6 +428,7 @@ def choose_pokemon(cur):
 	mypokemon.load_pokemon_type(qry_res)
 	return mypokemon
 
+# Función del menú para elegir un Ataque
 def load_attacks(cur, mypokemon):
 	cur.execute('''SELECT attack.attackID, attack.name, attack.PWR, attack.PP, type.name  
 	FROM attack, pokemon, pokemon_attack, type 
@@ -487,26 +501,24 @@ def load_attacks(cur, mypokemon):
 if __name__ == '__main__':
 
 	seed(time.time())
-
-	# pygame.mixer.init()
-	# pygame.mixer.music.load("101 - opening.mp3")
-	# pygame.mixer.music.play()
-
-	_attacks_effectiveness_table = load_csv("attacks_effectiveness.csv")
 	_replay_table = []
-	
-	# time.sleep(1)
-	# tprint("POKESIM")
-	# time.sleep(3)
-	
+
+
 	#Hago la conexion con la base de datos y creo el cursor
-	
 	conn = motorDB.connect(host='localhost', user='guest', password='guest')
 	conn.autocommit(True)
 	cur = conn.cursor()
 	cur.execute("USE myPokemonDB")
+	
+	pygame.mixer.init()
+	pygame.mixer.music.load("101 - opening.mp3")
+	pygame.mixer.music.play()
 
-
+	time.sleep(1)
+	tprint("POKESIM")
+	time.sleep(3)
+	
+	
 	#Tabla de ataques
 	cur.execute('''SELECT * FROM attack ORDER BY attackID''')
 	qry_attack_list = cur.fetchall()
@@ -516,6 +528,15 @@ if __name__ == '__main__':
 					FROM attack, secEffect, attack_secEffect 
 					WHERE attack.attackID = attack_secEffect.attackID AND attack_secEffect.secEffectID = secEffect.secEffectID;''')
 	qry_attacks_with_secEffect = cur.fetchall()
+
+	# Tabla de multiplicadores por debilidades y resistencias
+	cur.execute('''SELECT att.name, pok.name, multiplier  
+					FROM attackEffectiveness 
+					INNER JOIN type att ON attackEffectiveness.attackTypeID = att.typeID  
+					INNER JOIN type pok ON attackEffectiveness.pokemonTypeID = pok.typeID''')
+	_attacks_effectiveness_table = cur.fetchall()
+
+
 
 	#Menu principal del juego
 
@@ -558,10 +579,11 @@ if __name__ == '__main__':
 		input("\nPresione ENTER para continuar con la batalla")
 
 		# Comenzando la pelea
-		# pygame.mixer.music.stop()
-		# pygame.mixer.music.load("115 - battle.mp3")
-		# pygame.mixer.music.play()
-		# figth_screen()
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load("115 - battle.mp3")
+		pygame.mixer.music.play()
+
+		figth_screen()
 
 		turn = 1
 		while(mypokemon.curr_hp >0 and otherpokemon.curr_hp>0):
@@ -580,21 +602,26 @@ if __name__ == '__main__':
 				while(flag_attack_select == False):
 
 					input_attack = input().strip().split(' ')
-					if(input_attack == ''):
-						delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+					
+					if(len(input_attack) > 2):
+						delay_print("[INFO] | Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
 						continue
+
 					elif (len(input_attack) == 2 and input_attack[0].lower() == "info"):
 						mypokemon.att[int(input_attack[1])-1].print_info_attack()
 						delay_print('\n\nElija un ataque (o \"info <#>\" para ver la informacion del ataque):')
 						mypokemon.show_attacks()
 						continue
 
-					elif(len(input_attack) == 1 and int(input_attack[0]) >= 0 and int(input_attack[0])<=4):
-						mypokemon.do_attack(input_attack[0], otherpokemon, _attacks_effectiveness_table, _replay_table)
-						flag_attack_select = True
 					else:
-						delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
-						continue
+						try:
+							input_attack = int(input_attack[0])
+							if(input_attack > 0 and input_attack <= NUM_ATTACKS):
+								mypokemon.do_attack(input_attack, otherpokemon, _attacks_effectiveness_table, _replay_table)
+								flag_attack_select = True
+						except:
+							delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+							continue
 
 				mypokemon.print_health_bars()
 				otherpokemon.print_health_bars()
@@ -608,21 +635,27 @@ if __name__ == '__main__':
 					while(flag_attack_select == False):
 
 						input_attack = input().strip().split(' ')
-						if(input_attack == ''):
-							delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+
+						if(len(input_attack) > 2):
+							delay_print("[INFO] | Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
 							continue
+
 						elif (len(input_attack) == 2 and input_attack[0].lower() == "info"):
 							otherpokemon.att[int(input_attack[1])-1].print_info_attack()
 							delay_print('\n\nElija un ataque (o \"info <#>\" para ver la informacion del ataque):')
 							otherpokemon.show_attacks()
 							continue
 
-						elif(len(input_attack) == 1 and int(input_attack[0]) >= 0 and int(input_attack[0])<=4):
-							otherpokemon.do_attack(input_attack[0], mypokemon, _attacks_effectiveness_table, _replay_table)
-							flag_attack_select = True
 						else:
-							delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
-							continue
+							try:
+								input_attack = int(input_attack[0])
+								if(input_attack > 0 and input_attack <= NUM_ATTACKS):
+									otherpokemon.do_attack(input_attack, mypokemon, _attacks_effectiveness_table, _replay_table)
+									flag_attack_select = True
+							except:
+								delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+								continue
+
 					mypokemon.print_health_bars()
 					otherpokemon.print_health_bars()
 					time.sleep(1)
@@ -642,26 +675,32 @@ if __name__ == '__main__':
 				while(flag_attack_select == False):
 
 					input_attack = input().strip().split(' ')
-					if(input_attack == ''):
-						delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+
+					if(len(input_attack) > 2):
+						delay_print("[INFO] | Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
 						continue
+
 					elif (len(input_attack) == 2 and input_attack[0].lower() == "info"):
 						otherpokemon.att[int(input_attack[1])-1].print_info_attack()
 						delay_print('\n\nElija un ataque (o \"info <#>\" para ver la informacion del ataque):')
 						otherpokemon.show_attacks()
 						continue
 
-					elif(len(input_attack) == 1 and int(input_attack[0]) >= 0 and int(input_attack[0])<=4):
-						otherpokemon.do_attack(input_attack[0], mypokemon, _attacks_effectiveness_table, _replay_table)
-						flag_attack_select = True
 					else:
-						delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
-						continue
+						try:
+							input_attack = int(input_attack[0])
+							if(input_attack > 0 and input_attack <= NUM_ATTACKS):
+								otherpokemon.do_attack(input_attack, mypokemon, _attacks_effectiveness_table, _replay_table)
+								flag_attack_select = True
+						except:
+							delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+							continue
 
 				mypokemon.print_health_bars()
 				otherpokemon.print_health_bars()
 
 				if(mypokemon.curr_hp > 0 and otherpokemon.curr_hp > 0):
+
 					delay_print('Es el turno de {}'.format(mypokemon.name))
 					delay_print('Elija un ataque (o \"info <#>\" para ver la informacion del ataque)')
 					mypokemon.show_attacks()
@@ -670,22 +709,30 @@ if __name__ == '__main__':
 					while(flag_attack_select == False):
 
 						input_attack = input().strip().split(' ')
-						if (len(input_attack) == 2 and input_attack[0].lower() == "info"):
+						
+						if(len(input_attack) > 2):
+							delay_print("[INFO] | Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+							continue
+
+						elif (len(input_attack) == 2 and input_attack[0].lower() == "info"):
 							mypokemon.att[int(input_attack[1])-1].print_info_attack()
 							delay_print('\n\nElija un ataque (o \"info <#>\" para ver la informacion del ataque):')
 							mypokemon.show_attacks()
 							continue
 
-						elif(len(input_attack) == 1 and int(input_attack[0]) >= 0 and int(input_attack[0])<=4):
-							mypokemon.do_attack(input_attack[0], otherpokemon, _attacks_effectiveness_table, _replay_table)
-							flag_attack_select = True
 						else:
-							delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
-							continue
+							try:
+								input_attack = int(input_attack[0])
+								if(input_attack > 0 and input_attack <= NUM_ATTACKS):
+									mypokemon.do_attack(input_attack, otherpokemon, _attacks_effectiveness_table, _replay_table)
+									flag_attack_select = True
+							except:
+								delay_print("Ingreso incorrecto. Ingrese el número del ataque a utilizar o \"info <#>\" para ver la informacion de un ataque")
+								continue
 
-					mypokemon.print_health_bars()
-					otherpokemon.print_health_bars()
-					time.sleep(1)
+						mypokemon.print_health_bars()
+						otherpokemon.print_health_bars()
+						time.sleep(1)
 
 			else:
 				if(randint(0,1) == 0):
@@ -710,11 +757,14 @@ if __name__ == '__main__':
 		else:
 			delay_print("{} has fainted!".format(otherpokemon.name))
 		time.sleep(1)
-		# pygame.mixer.music.stop()
-		# pygame.mixer.music.load("145 - ending.mp3")
-		# pygame.mixer.music.play()
-		#battle_end_screen(mypokemon, otherpokemon)
 
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load("145 - ending.mp3")
+		pygame.mixer.music.play()
+
+		battle_end_screen(mypokemon, otherpokemon)
+
+		intput()
 
 	else:
 		print("[ERROR] | Elección errónea. Saliendo del programa\n\n")
