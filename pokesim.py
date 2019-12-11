@@ -162,14 +162,14 @@ class Pokemon():
 			if(randint(1,4) == 1): 										# 1/4 de chances de poer atacar
 				return True
 			else:
-				print("{} is fully paralyzed.".format(self.name))
+				delay_print("{} is fully paralyzed.".format(self.name))
 				return False
 
 		elif(self.status == "confused"):
 			delay_print("{} is confused...".format(self.name))
 			if(self.confusion_counter == 0):
 				self.status = "ok"
-				print("{} is no more confused!".format(self.name))
+				delay_print("{} is no more confused!".format(self.name))
 				return True
 			self.confusion_counter -= 1
 			if(randint(1,2) == 1):
@@ -187,7 +187,6 @@ class Pokemon():
 			self.calculate_health_bars()
 			self.print_health_bars()
 			def_pk.print_health_bars()
-
 			return True
 
 		elif(self.status == "burned"):
@@ -216,7 +215,7 @@ class Pokemon():
 		att_index = num-1								# Calculo el índice de la lista de ataques: -1 a lo que ingresó el usuario
 		repInfo = pkrply.ReplayInfo(_repID, self.num)	# Creo un objeto que contiene toda la info necesaria para la tabla replayInfo
 		repInfo.attackID = self.att[att_index].id 		# Cargo el ataque utilizado. Ya posee el replayID y el pokemon con el contructor
-		repInfo.status_prev = self.status 					# Cargo el estado de la variable status del pokemon atacante
+		repInfo.status_prev = self.status 				# Cargo el estado de la variable status del pokemon atacante
 
 		canAttack = self.check_status(def_pk) 			# Me fijo si puedo atacar debido a efectos secundarios
 		repInfo.canAttack = canAttack 					# Guardo la data para el replay
@@ -314,7 +313,7 @@ class Pokemon():
 				#print("[DEBUG] | No tiene efecto secundario")
 
 		else:
-			delay_print("\n{} has failed...\n".format(self.att[att_index].name))
+			delay_print("\n{}'s {} has failed...\n".format(self.name, self.att[att_index].name))
 
 		_replay_table.append(repInfo)
 		del repInfo
@@ -471,7 +470,7 @@ def load_attacks(cur, mypokemon):
 	qry_res = cur.fetchall()
 
 	print(tabulate(qry_res, headers=['#ID', 'Ataque', 'PWR', 'PP', 'Tipo'], tablefmt='fancy_grid'))
-	print("Elija 4 ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n")
+	print("Elija {} ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n".format(NUM_ATTACKS))
 
 	attack_count = 0
 	invalid_attack_flag = True
@@ -491,7 +490,7 @@ def load_attacks(cur, mypokemon):
 			input("\nPresione una tecla para continuar\n")
 			CLR_SCRN()
 			print(tabulate(qry_res, headers=['#ID', 'Ataque', 'PWR', 'PP', 'Tipo'], tablefmt='fancy_grid'))
-			print("Elija 4 ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n")
+			print("Elija {} ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n".format(NUM_ATTACKS))
 		else:
 			for n in input_attack:
 				invalid_attack_flag = True
@@ -506,7 +505,7 @@ def load_attacks(cur, mypokemon):
 							invalid_attack_flag = False
 							CLR_SCRN()
 							print(tabulate(qry_res, headers=['#ID', 'Ataque', 'PWR', 'PP', 'Tipo'], tablefmt='fancy_grid'))
-							print("Elija 4 ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n")
+							print("Elija {} ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n".format(NUM_ATTACKS))
 
 				except Exception as e:
 					continue
@@ -521,7 +520,7 @@ def load_attacks(cur, mypokemon):
 				pokemon_attack_num = []
 				CLR_SCRN()
 				print(tabulate(qry_res, headers=['#ID', 'Ataque', 'PWR', 'PP', 'Tipo'], tablefmt='fancy_grid'))
-				print("Elija 4 ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n")
+				print("Elija {} ataques ingresando su número de ID de la lista o \"info <#ID>\" para obtener una descripcion detallada del attaque.\n".format(NUM_ATTACKS))
 
 	#Ya elegí los 4 ataques. Se los instancio al pokemon
 	mypokemon.load_attacks(pokemon_attack_num, cur, qry_attacks_with_secEffect)
@@ -532,6 +531,7 @@ def load_attacks(cur, mypokemon):
 
 if __name__ == '__main__':
 
+	CLR_SCRN()
 	seed(time.time())
 	_replay_table = []
 
@@ -902,7 +902,7 @@ if __name__ == '__main__':
 		tprint("\n\n\n VS \n\n\n")
 		print("----------POKEMON 2----------")
 		pokemon_2.print_pokemon_info()
-		#time.sleep(2)
+		time.sleep(2)
 
 		# Comenzando la repe
 		# pygame.mixer.music.stop()
@@ -918,6 +918,10 @@ if __name__ == '__main__':
 			qry_replay_info = cur.fetchone()
 			if(qry_replay_info == None):
 				flag = False
+				continue
+
+			#print(qry_replay_info)
+			
 			turn_info = pkrply.LoadReplayInfo(qry_replay_info)
 
 			delay_print('\n{} vs {} - Turno: {}\n'.format(pokemon_1.name, pokemon_2.name, turn))
@@ -927,37 +931,59 @@ if __name__ == '__main__':
 			delay_print('Es el turno de {}'.format(qry_pokemon_table[turn_info.pokemonID-1][1]))
 			delay_print('Elija un ataque (o \"info <#>\" para ver la informacion del ataque)')
 			
-			if(qry_pokemon_table[turn_info.pokemonID-1][1] == pokemon_1.name):
+			if(turn_info.pokemonID == pokemon_1.num):
 				pokemon_1.show_attacks()
+				turn_info.pokemon_do_attack(pokemon_1, pokemon_2, qry_attack_list)
 			else:
 				pokemon_2.show_attacks()
+				turn_info.pokemon_do_attack(pokemon_2, pokemon_1, qry_attack_list)
 			time.sleep(0.5)
 
-			turn_info.pokemon_do_attack(qry_pokemon_table, qry_attack_list)
 
-			qry_replay_info = cur.fetchone()
-			if(qry_replay_info == None):
-				flag = False
-				sys.exit()
-			turn_info = pkrply.LoadReplayInfo(qry_replay_info)
+			########## Segunda mitad del turno ###########
 
 			pokemon_1.print_health_bars()
 			pokemon_2.print_health_bars()
 
+			qry_replay_info = cur.fetchone()
+			if(qry_replay_info == None):
+				flag = False
+				continue
+
+			turn_info = pkrply.LoadReplayInfo(qry_replay_info)
+
 			delay_print('Es el turno de {}'.format(qry_pokemon_table[turn_info.pokemonID-1][1]))
 			delay_print('Elija un ataque (o \"info <#>\" para ver la informacion del ataque)')
 			
-			if(qry_pokemon_table[turn_info.pokemonID-1][1] == pokemon_1.name):
+			if(turn_info.pokemonID == pokemon_1.num):
 				pokemon_1.show_attacks()
+				turn_info.pokemon_do_attack(pokemon_1, pokemon_2, qry_attack_list)
 			else:
 				pokemon_2.show_attacks()
+				turn_info.pokemon_do_attack(pokemon_2, pokemon_1, qry_attack_list)
 			time.sleep(0.5)
 
-			turn_info.pokemon_do_attack(qry_pokemon_table, qry_attack_list)
+			pokemon_1.print_health_bars()
+			pokemon_2.print_health_bars()
 
+			time.sleep(0.5)
 
 			turn +=1
-			#time.sleep(0.5)
+
+		# Anunciando al ganador
+		if(pokemon_1.curr_hp<=0):
+			delay_print("{} has fainted!".format(pokemon_1.name))
+		else:
+			delay_print("{} has fainted!".format(pokemon_2.name))
+		time.sleep(1)
+
+		# pygame.mixer.music.stop()
+		# pygame.mixer.music.load("145 - ending.mp3")
+		# pygame.mixer.music.play()
+
+		# battle_end_screen(pokemon_1, pokemon_2)
+
+		input("\n\n\nPresione ENTER para salir")
 
 	# Opción para eliminar replays
 	elif(op == '3'):

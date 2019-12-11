@@ -40,8 +40,93 @@ class LoadReplayInfo():
 		self.attackDmg = pv[0][11]
 		self.attackSecEffect = pv[0][12]
 
-	def pokemon_do_attack(self, qry_pokemon_table, qry_attack_list):
-		delay_print("{} used {}!\n".format(qry_pokemon_table[self.pokemonID-1][1], qry_attack_list[self.attackID-1][1]))
+		self.pokemon_name = ''
+		self.attack_name = ''
+
+
+	def pokemon_do_attack(self, pk_attacking, pk_defending, qry_attack_list):
+		
+		self.attack_name = qry_attack_list[self.attackID-1][1]
+		
+		self.check_status(pk_attacking)
+
+		if(self.canAttack == True):
+			if(self.attackHit == True):
+				delay_print("\n{} used {}!\n".format(pk_attacking.name, self.attack_name))
+				if(self.attackHasEffect == False):
+					delay_print("It doesn't have effect...")
+				elif(self.attackWasCrit == True):
+					delay_print("It's a critical hit!")
+				if(self.attackEffectiveness == "not effective"):
+					delay_print("It's not very effective...")
+				elif(self.attackEffectiveness == "very effective"):
+					delay_print("It's super effective!")
+
+				pk_defending.curr_hp -= self.attackDmg
+				if(pk_defending.curr_hp < 0):
+					pk_defending.curr_hp = 0
+
+				pk_defending.calculate_health_bars()
+
+				self.check_attack_secEffect(pk_defending)
+
+
+			else:
+				delay_print("\n{}'s {} has failed...\n".format(pk_attacking.name, self.attack_name))
+
+
+	def check_attack_secEffect(self, pk_defending):
+		if(self.attackSecEffect == "paralized"):
+			delay_print("{} is now paralyzed!".format(pk_defending.name))
+
+		elif(self.attackSecEffect == "poisoned"):
+			delay_print("{} is now poisoned!".format(pk_defending.name))
+
+		elif(self.attackSecEffect == "burned"):
+			delay_print("{} is now burned!".format(pk_defending.name))
+
+		elif(self.attackSecEffect == "frozen"):
+			delay_print("{} is now frozen solid!".format(pk_defending.name))
+
+		elif(self.attackSecEffect == "confused"):
+			delay_print("{} is now confused!".format(pk_defending.name))
+
+		elif(self.attackSecEffect == "sleep"):
+			delay_print("{} fall sleep".format(pk_defending.name))
+
+
+	def check_status(self, pokemon):
+
+		if(self.status_prev == "ok"):
+			return
+
+		elif(self.status_prev == "sleep"):
+			delay_print("{} is fast asleep...".format(pokemon.name))
+			if(self.status_post != "sleep"):
+				delay_print("{} woke up!".format(pokemon.name))
+
+		elif(self.status_prev == "paralyzed" and self.canAttack == False):
+			delay_print("{} is fully paralyzed.".format(pokemon.name))
+
+		elif(self.status_prev == "confused"):
+			delay_print("{} is confused...".format(pokemon.name))
+			if(self.status_post != "confused"):
+				delay_print("{} is no more confused!".format(pokemon.name))
+			if(self.canAttack == False):
+				delay_print("It hurts itself in its confusion!")
+
+		elif(self.status_prev == "poisoned"):
+			delay_print("{} is poisoned...".format(pokemon.name))
+
+		elif(self.status_prev == "burned"):
+			delay_print("{} is burned...".format(pokemon.name))
+
+		elif(self.status_prev == "frozen"):
+			delay_print(pokemon.name, " is frozen solid...")
+			if(self.status_post != "frozen"):
+				delay_print(pokemon.name," is no more frozen!")
+
+
 
 
 
