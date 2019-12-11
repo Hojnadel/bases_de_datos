@@ -154,7 +154,8 @@ if __name__ == '__main__':
 			attackWasCrit boolean DEFAULT NULL,
 			attackEffectiveness varchar(20) DEFAULT NULL,
 			attackDmg int DEFAULT NULL,
-			attackSecEffect varchar(20) DEFAULT NULL		)	''')
+			attackSecEffect varchar(20) DEFAULT NULL,
+			statusSelfDmg int DEFAULT NULL		)	''')
 	print("[INFO] | Tabla \"replayInfo\" creada")
 
 

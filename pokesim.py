@@ -47,7 +47,12 @@ def battle_end_screen(p1, p2):
 		print("THE WINNER OF THE BATTLE IS: ")
 		tprint(winner)
 		time.sleep(0.5)
-	input("\n\n\n\n\nApruebenmé!")
+	print("\n\n\n\n\nApruebenmé!")
+	time.sleep(2)
+	input("\nPresione ENTER para salir")
+
+
+
 
 # Función para cargar un archivo CSV
 def load_csv(csv_route):
@@ -144,7 +149,7 @@ class Pokemon():
 			print('{}) {}'.format(n+1, self.att[n].name))
 
 	# Método de Pokemon para saber si puede atacar debido a algún estado. Devuelve True si el pokemon puede atacar, False eoc.
-	def check_status(self, def_pk):
+	def check_status(self, def_pk, repInfo):
 		
 		if(self.status == "ok"):
 			return True
@@ -174,15 +179,17 @@ class Pokemon():
 			self.confusion_counter -= 1
 			if(randint(1,2) == 1):
 				delay_print("It hurts itself in its confusion!")
-				self.curr_hp -= math.floor(((((2*self.lvl/5+2)*40*(self.str/self.df))/50)+2)) 		# Se daña como si fuese atacado
-				self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp								# por un ataque de PWR 40 y daño
-				self.calculate_health_bars() 														# físico, sin modificadores
+				repInfo.status_self_dmg = math.floor(((((2*self.lvl/5+2)*40*(self.str/self.df))/50)+2)) 	# Se daña como si fuese atacado
+				self.curr_hp -= repInfo.status_self_dmg													# por un ataque de PWR 40 y daño
+				self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp										# físico, sin modificadores
+				self.calculate_health_bars() 														
 				return False
 			return True
 
 		elif(self.status == "poisoned"):
 			delay_print("{} is poisoned...".format(self.name))
-			self.curr_hp -= math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
+			repInfo.status_self_dmg = math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
+			self.curr_hp -= repInfo.status_self_dmg
 			self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp
 			self.calculate_health_bars()
 			self.print_health_bars()
@@ -191,7 +198,8 @@ class Pokemon():
 
 		elif(self.status == "burned"):
 			delay_print("{} is burned...".format(self.name))
-			self.curr_hp -= math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
+			repInfo.status_self_dmg = math.floor(self.hp/16) 						# Pierde 1/16 de su vida total cada turno
+			self.curr_hp -= repInfo.status_self_dmg
 			self.curr_hp = 0 if self.curr_hp < 0 else self.curr_hp
 			self.calculate_health_bars()
 			self.print_health_bars()
@@ -217,7 +225,7 @@ class Pokemon():
 		repInfo.attackID = self.att[att_index].id 		# Cargo el ataque utilizado. Ya posee el replayID y el pokemon con el contructor
 		repInfo.status_prev = self.status 				# Cargo el estado de la variable status del pokemon atacante
 
-		canAttack = self.check_status(def_pk) 			# Me fijo si puedo atacar debido a efectos secundarios
+		canAttack = self.check_status(def_pk, repInfo)	# Me fijo si puedo atacar debido a efectos secundarios
 		repInfo.canAttack = canAttack 					# Guardo la data para el replay
 		repInfo.status_post = self.status 				# Guardo esta información en un campo nuevo porque en check_status() pudo curarse
 		
@@ -542,13 +550,13 @@ if __name__ == '__main__':
 	cur = conn.cursor()
 	cur.execute("USE myPokemonDB")
 	
-	# pygame.mixer.init()
-	# pygame.mixer.music.load("101 - opening.mp3")
-	# pygame.mixer.music.play()
+	pygame.mixer.init()
+	pygame.mixer.music.load("101 - opening.mp3")
+	pygame.mixer.music.play()
 
-	# time.sleep(1)
-	# tprint("POKESIM")
-	# time.sleep(3)	
+	time.sleep(1)
+	tprint("POKESIM")
+	time.sleep(3)	
 	
 	# Tabla de ataques
 	cur.execute('''SELECT * FROM attack ORDER BY attackID''')
@@ -561,19 +569,15 @@ if __name__ == '__main__':
 	qry_attacks_with_secEffect = cur.fetchall()
 
 	# Tabla de multiplicadores por debilidades y resistencias
-	cur.execute('''SELECT att.name, pok.name, multiplier  
+	cur.execute('''SELECT attType.name, pokType.name, multiplier  
 					FROM attackEffectiveness 
-					INNER JOIN type att ON attackEffectiveness.attackTypeID = att.typeID  
-					INNER JOIN type pok ON attackEffectiveness.pokemonTypeID = pok.typeID''')
+					INNER JOIN type attType ON attackEffectiveness.attackTypeID = attType.typeID  
+					INNER JOIN type pokType ON attackEffectiveness.pokemonTypeID = pokType.typeID''')
 	_attacks_effectiveness_table = cur.fetchall()
 
 
 
 	#Menu principal del juego
-
-	#print('''Ingrese el modo de uso:
-		#(1) Simulador de batalla P2 vs P2
-		#(2) Repetidor de batallas''')
 	op = input('''Ingrese el modo de uso:
 		(1) Simulador de batalla P2 vs P2
 		(2) Repetidor de batallas
@@ -610,14 +614,14 @@ if __name__ == '__main__':
 		input("\nPresione ENTER para continuar con la batalla")
 
 		# Comenzando la pelea
-		# pygame.mixer.music.stop()
-		# pygame.mixer.music.load("115 - battle.mp3")
-		# pygame.mixer.music.play()
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load("115 - battle.mp3")
+		pygame.mixer.music.play()
 
-		# figth_screen()
+		figth_screen()
 
 		pkrply.create_replay_entrance(cur, conn)			# Creo una entrada en la tabla de replays para que le asigne un replayID a esta batalla
-		cur.execute('''	SELECT replayID 				# Obtengo el número de replayID de esta batalla
+		cur.execute('''	SELECT replayID 					# Obtengo el número de replayID de esta batalla
 						FROM replay
 						ORDER BY replayID DESC
 						LIMIT 1''')
@@ -822,12 +826,12 @@ if __name__ == '__main__':
 			# print("[DEBUG] | attackSecEffect: {}".format(n.attackSecEffect))
 
 			cur.execute('''INSERT INTO replayInfo (replayID, time, pokemonID, attackID, statusPrev, statusPost, canAttack,
-							attackHit, attackHasEffect, attackWasCrit, attackEffectiveness, attackDmg, attackSecEffect)
-							VALUES ({},"{}",{},{},"{}","{}",{},{},{},{},"{}",{},"{}");
-							'''.format(n.replayID, n.time, n.pokemonID, n.attackID, n.status_prev, n.status_post, n.canAttack, n.attackHit, n.attackHasEffect, n.attackWasCrit, n.attackEffectiveness, n.attackDmg, n.attackSecEffect))
+							attackHit, attackHasEffect, attackWasCrit, attackEffectiveness, attackDmg, attackSecEffect, statusSelfDmg)
+							VALUES ({},"{}",{},{},"{}","{}",{},{},{},{},"{}",{},"{}",{});
+							'''.format(n.replayID, n.time, n.pokemonID, n.attackID, n.status_prev, n.status_post, n.canAttack, n.attackHit, n.attackHasEffect, n.attackWasCrit, n.attackEffectiveness, n.attackDmg, n.attackSecEffect, n.status_self_dmg))
 		conn.commit()
 
-		print("[INFO] | ReplayInfo loaded in the data base")
+		#print("[INFO] | ReplayInfo loaded in the data base")
 
 		# Anunciando al ganador
 		if(mypokemon.curr_hp<=0):
@@ -836,14 +840,11 @@ if __name__ == '__main__':
 			delay_print("{} has fainted!".format(otherpokemon.name))
 		time.sleep(1)
 
-		# pygame.mixer.music.stop()
-		# pygame.mixer.music.load("145 - ending.mp3")
-		# pygame.mixer.music.play()
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load("145 - ending.mp3")
+		pygame.mixer.music.play()
 
-		# battle_end_screen(mypokemon, otherpokemon)
-
-		input("\nPresione ENTER para salir")
-		
+		battle_end_screen(mypokemon, otherpokemon)
 
 
 	# Opción de replays
@@ -893,8 +894,10 @@ if __name__ == '__main__':
 
 		pokemon_1 = load_pokemon(cur_aux, pokemonID_1)
 		pokemon_1.load_attacks(pk1_attacks_vect, cur_aux, qry_attacks_with_secEffect)
+		pokemon_1._identifier = 1
 		pokemon_2 = load_pokemon(cur_aux, pokemonID_2)
 		pokemon_2.load_attacks(pk2_attacks_vect, cur_aux, qry_attacks_with_secEffect)
+		pokemon_2._identifier = 2
 
 		CLR_SCRN()
 		print("----------POKEMON 1----------")
@@ -905,16 +908,15 @@ if __name__ == '__main__':
 		time.sleep(2)
 
 		# Comenzando la repe
-		# pygame.mixer.music.stop()
-		# pygame.mixer.music.load("115 - battle.mp3")
-		# pygame.mixer.music.play()
-		# figth_screen()
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load("115 - battle.mp3")
+		pygame.mixer.music.play()
+		figth_screen()
 
 		flag = True
 		turn = 1
 		while(flag == True):
 
-			CLR_SCRN()
 			qry_replay_info = cur.fetchone()
 			if(qry_replay_info == None):
 				flag = False
@@ -923,6 +925,8 @@ if __name__ == '__main__':
 			#print(qry_replay_info)
 			
 			turn_info = pkrply.LoadReplayInfo(qry_replay_info)
+
+			CLR_SCRN()
 
 			delay_print('\n{} vs {} - Turno: {}\n'.format(pokemon_1.name, pokemon_2.name, turn))
 			pokemon_1.print_health_bars()
@@ -966,7 +970,7 @@ if __name__ == '__main__':
 			pokemon_1.print_health_bars()
 			pokemon_2.print_health_bars()
 
-			time.sleep(0.5)
+			time.sleep(0.75)
 
 			turn +=1
 
@@ -977,13 +981,11 @@ if __name__ == '__main__':
 			delay_print("{} has fainted!".format(pokemon_2.name))
 		time.sleep(1)
 
-		# pygame.mixer.music.stop()
-		# pygame.mixer.music.load("145 - ending.mp3")
-		# pygame.mixer.music.play()
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load("145 - ending.mp3")
+		pygame.mixer.music.play()
 
-		# battle_end_screen(pokemon_1, pokemon_2)
-
-		input("\n\n\nPresione ENTER para salir")
+		battle_end_screen(pokemon_1, pokemon_2)
 
 	# Opción para eliminar replays
 	elif(op == '3'):

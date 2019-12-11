@@ -21,6 +21,7 @@ class ReplayInfo():
 		self.attackEffectiveness = '-'
 		self.attackDmg = 0
 		self.attackSecEffect = 'None'
+		self.status_self_dmg = 0
 
 
 # Clase para reproducir un replay. Se carga con la info de la base de datos.
@@ -39,6 +40,7 @@ class LoadReplayInfo():
 		self.attackEffectiveness = pv[0][10]
 		self.attackDmg = pv[0][11]
 		self.attackSecEffect = pv[0][12]
+		self.status_self_dmg = pv[0][13]
 
 		self.pokemon_name = ''
 		self.attack_name = ''
@@ -49,6 +51,15 @@ class LoadReplayInfo():
 		self.attack_name = qry_attack_list[self.attackID-1][1]
 		
 		self.check_status(pk_attacking)
+
+		# if(self.status_post != "ok" and self.status_self_dmg != 0):
+		# 	if(pk_attacking._identifier == 1):
+		# 		pk_attacking.print_health_bars()
+		# 		pk_defending.print_health_bars()
+		# 	else:
+		# 		pk_defending.print_health_bars()
+		# 		pk_attacking.print_health_bars()
+
 
 		if(self.canAttack == True):
 			if(self.attackHit == True):
@@ -63,8 +74,7 @@ class LoadReplayInfo():
 					delay_print("It's super effective!")
 
 				pk_defending.curr_hp -= self.attackDmg
-				if(pk_defending.curr_hp < 0):
-					pk_defending.curr_hp = 0
+				pk_defending.curr_hp = 0 if pk_defending.curr_hp < 0 else pk_defending.curr_hp
 
 				pk_defending.calculate_health_bars()
 
@@ -95,36 +105,45 @@ class LoadReplayInfo():
 			delay_print("{} fall sleep".format(pk_defending.name))
 
 
-	def check_status(self, pokemon):
+	def check_status(self, pk_attacking):
 
 		if(self.status_prev == "ok"):
 			return
 
 		elif(self.status_prev == "sleep"):
-			delay_print("{} is fast asleep...".format(pokemon.name))
+			delay_print("\n{} is fast asleep...".format(pk_attacking.name))
 			if(self.status_post != "sleep"):
-				delay_print("{} woke up!".format(pokemon.name))
+				delay_print("\n{} woke up!".format(pk_attacking.name))
 
 		elif(self.status_prev == "paralyzed" and self.canAttack == False):
-			delay_print("{} is fully paralyzed.".format(pokemon.name))
+			delay_print("\n{} is fully paralyzed.".format(pk_attacking.name))
 
 		elif(self.status_prev == "confused"):
-			delay_print("{} is confused...".format(pokemon.name))
+			delay_print("\n{} is confused...".format(pk_attacking.name))
 			if(self.status_post != "confused"):
-				delay_print("{} is no more confused!".format(pokemon.name))
+				delay_print("\n{} is no more confused!".format(pk_attacking.name))
 			if(self.canAttack == False):
 				delay_print("It hurts itself in its confusion!")
+				pk_attacking.curr_hp -= self.status_self_dmg
+				pk_attacking.curr_hp = 0 if pk_attacking.curr_hp < 0 else pk_attacking.curr_hp
+				pk_attacking.calculate_health_bars()
 
 		elif(self.status_prev == "poisoned"):
-			delay_print("{} is poisoned...".format(pokemon.name))
+			delay_print("\n{} is poisoned...".format(pk_attacking.name))
+			pk_attacking.curr_hp -= self.status_self_dmg
+			pk_attacking.curr_hp = 0 if pk_attacking.curr_hp < 0 else pk_attacking.curr_hp
+			pk_attacking.calculate_health_bars()
 
 		elif(self.status_prev == "burned"):
-			delay_print("{} is burned...".format(pokemon.name))
+			delay_print("\n{} is burned...".format(pk_attacking.name))
+			pk_attacking.curr_hp -= self.status_self_dmg
+			pk_attacking.curr_hp = 0 if pk_attacking.curr_hp < 0 else pk_attacking.curr_hp
+			pk_attacking.calculate_health_bars()
 
 		elif(self.status_prev == "frozen"):
-			delay_print(pokemon.name, " is frozen solid...")
+			delay_print(pk_attacking.name, " is frozen solid...")
 			if(self.status_post != "frozen"):
-				delay_print(pokemon.name," is no more frozen!")
+				delay_print(pk_attacking.name," is no more frozen!")
 
 
 
