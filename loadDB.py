@@ -47,6 +47,8 @@ if __name__ == '__main__':
 	cur.execute("DROP TABLE if exists attack")
 	cur.execute("DROP TABLE if exists secEffect")
 	cur.execute("DROP TABLE if exists attackEffectiveness")
+	cur.execute("DROP TABLE if exists replay")
+	cur.execute("DROP TABLE if exists replayInfo")
 
 	cur.execute("DROP TABLE if exists pokemon_type")
 	cur.execute("DROP TABLE if exists pokemon_attack")
@@ -65,12 +67,14 @@ if __name__ == '__main__':
 			SPD int NOT NULL)''')
 	print("[INFO] | Tabla \"pokemon\" creada")
 
+
 	print("[INFO] | Creando tabla \"type\"")
 	cur.execute('''CREATE TABLE if not exists type
 		(	typeID	int primary key NOT NULL AUTO_INCREMENT,
 			name varchar(20) NOT NULL,
 			dmgTypeID int NOT NULL	)''')
 	print("[INFO] | Tabla \"type\" creada")
+
 
 	print("[INFO] | Creando tabla \"attack\"")
 	cur.execute(''' CREATE TABLE if not exists attack
@@ -84,11 +88,13 @@ if __name__ == '__main__':
 			description varchar(500))''')
 	print("[INFO] | Tabla \"attack\" creada")
 
+
 	print("[INFO] | Creando tabla \"dmgType\"")
 	cur.execute('''CREATE TABLE if not exists dmgType
 		(	dmgTypeID int primary key NOT NULL AUTO_INCREMENT,
 			name varchar(10) NOT NULL	) ''')
 	print("[INFO] | Tabla \"dmgType\" creada")
+
 
 	print("[INFO] | Creando tabla \"secEffect\"")
 	cur.execute('''CREATE TABLE if not exists secEffect
@@ -96,17 +102,20 @@ if __name__ == '__main__':
 			name varchar(30) NOT NULL)''')
 	print("[INFO] | Tabla \"secEffect\" creada")
 
+
 	print("[INFO] | Creando tabla \"pokemon_type\"")
 	cur.execute('''CREATE TABLE if not exists pokemon_type
 		(	pokemonID int NOT NULL,
 			typeID int NOT NULL	)''')
 	print("[INFO] | Tabla \"pokemon_type\" creada")
 
+
 	print("[INFO] | Creando tabla \"pokemon_attack\"")
 	cur.execute('''CREATE TABLE if not exists pokemon_attack
 		(	pokemonID int NOT NULL,
 			attackID int NOT NULL)	''')
 	print("[INFO] | Tabla \"pokemon_attack\" creada")
+
 
 	print("[INFO] | Creando tabla \"attack_secEffect\"")
 	cur.execute('''CREATE TABLE if not exists attack_secEffect
@@ -115,12 +124,39 @@ if __name__ == '__main__':
 			prob float NOT NULL)	''')
 	print("[INFO] | Tabla \"attack_secEffect\" creada")
 
+
 	print("[INFO] | Creando tabla \"attackEffectiveness\"")
 	cur.execute('''CREATE TABLE if not exists attackEffectiveness
 		(	attackTypeID int NOT NULL,
 			pokemonTypeID int NOT NULL,
 			multiplier float NOT NULL)	''')
 	print("[INFO] | Tabla \"attackEffectiveness\" creada")
+
+
+	print("[INFO] | Creando tabla \"replay\"")
+	cur.execute('''CREATE TABLE if not exists replay
+		(	replayID int primary key NOT NULL AUTO_INCREMENT,
+			time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP)	''')
+	print("[INFO] | Tabla \"replay\" creada")
+
+
+	print("[INFO] | Creando tabla \"replayInfo\"")
+	cur.execute('''CREATE TABLE if not exists replayInfo
+		(	replayID int NOT NULL,
+			time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			pokemonID int NOT NULL,
+			attackID int DEFAULT NULL,
+			statusPrev varchar(20) DEFAULT NULL,
+			statusPost varchar(20) DEFAULT NULL,
+			canAttack boolean DEFAULT NULL,
+			attackHit boolean DEFAULT NULL,
+			attackHasEffect boolean DEFAULT NULL,
+			attackWasCrit boolean DEFAULT NULL,
+			attackEffectiveness varchar(20) DEFAULT NULL,
+			attackDmg int DEFAULT NULL,
+			attackSecEffect varchar(20) DEFAULT NULL		)	''')
+	print("[INFO] | Tabla \"replayInfo\" creada")
+
 
 
 	#Estableciendo Foreign keys
@@ -164,6 +200,19 @@ if __name__ == '__main__':
 	cur.execute('''ALTER TABLE attack_secEffect ADD CONSTRAINT FK_att_seff_seff
 					FOREIGN KEY (secEffectID) REFERENCES secEffect(secEffectID)
 					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
+	cur.execute('''ALTER TABLE replayInfo ADD CONSTRAINT FK_replayInfo_replay
+					FOREIGN KEY (replayID) REFERENCES replay(replayID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
+	cur.execute('''ALTER TABLE replayInfo ADD CONSTRAINT FK_replayInfo_pokemon
+					FOREIGN KEY (pokemonID) REFERENCES pokemon(pokemonID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
+	cur.execute('''ALTER TABLE replayInfo ADD CONSTRAINT FK_replayInfo_attack
+					FOREIGN KEY (attackID) REFERENCES attack(attackID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
 	print("[INFO] | Relaciones (foreign keys) establecidas")
 
 	datos = []

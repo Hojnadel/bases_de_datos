@@ -40,13 +40,13 @@ Puño mareo,Confusión,20.0
 Psíquico,Bajar especial,30.0
 Ácido,Bajar especial,10.0
 Hueso palo,Bajar defensa,10.0
-Beso amoroso,Dormir,0.0
-Canto,Dormir,0.0
-Espora,Dormir,0.0
-Somnífero,Dormir,0.0
-Hipnosis,Dormir,0.0
-Rayo confuso,Confusión,0.0
-Onda trueno,Paralizar,0.0
-Paralizador,Paralizar,0.0
-Gas venenoso,Envenenamiento leve,0.0
-Polvo veneno,Envenenamiento leve,0.0
+Beso amoroso,Dormir,100.0
+Canto,Dormir,100.0
+Espora,Dormir,100.0
+Somnífero,Dormir,100.0
+Hipnosis,Dormir,100.0
+Rayo confuso,Confusión,100.0
+Onda trueno,Paralizar,100.0
+Paralizador,Paralizar,100.0
+Gas venenoso,Envenenamiento leve,100.0
+Polvo veneno,Envenenamiento leve,100.0
