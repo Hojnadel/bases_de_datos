@@ -49,6 +49,7 @@ if __name__ == '__main__':
 	cur.execute("DROP TABLE if exists attackEffectiveness")
 	cur.execute("DROP TABLE if exists replay")
 	cur.execute("DROP TABLE if exists replayInfo")
+	cur.execute("DROP TABLE if exists hallOfFame")
 
 	cur.execute("DROP TABLE if exists pokemon_type")
 	cur.execute("DROP TABLE if exists pokemon_attack")
@@ -159,6 +160,21 @@ if __name__ == '__main__':
 	print("[INFO] | Tabla \"replayInfo\" creada")
 
 
+	print("[INFO] | Creando tabla \"hallOfFame\"")
+	cur.execute('''CREATE TABLE if not exists hallOfFame
+				(	time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+					pokemonID int NOT NULL,
+					attackID1 int DEFAULT NULL,
+					attackID2 int DEFAULT NULL,
+					attackID3 int DEFAULT NULL,
+					attackID4 int DEFAULT NULL,
+					replayID int DEFAULT NULL)
+				''')
+
+	print("[INFO] | Tabla \"hallOfFame\" creada")
+
+
+
 
 	#Estableciendo Foreign keys
 	print("[INFO] | Estableciendo Foreign Keys")
@@ -213,6 +229,30 @@ if __name__ == '__main__':
 	cur.execute('''ALTER TABLE replayInfo ADD CONSTRAINT FK_replayInfo_attack
 					FOREIGN KEY (attackID) REFERENCES attack(attackID)
 					ON DELETE NO ACTION ON UPDATE NO ACTION''')
+
+	cur.execute('''ALTER TABLE hallOfFame ADD CONSTRAINT FK_hallOfFame_pokemonID
+					FOREIGN KEY (pokemonID) REFERENCES pokemon(pokemonID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION	''')
+
+	cur.execute('''ALTER TABLE hallOfFame ADD CONSTRAINT FK_hallOfFame_attackID1
+					FOREIGN KEY (attackID1) REFERENCES attack(attackID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION	''')
+
+	cur.execute('''ALTER TABLE hallOfFame ADD CONSTRAINT FK_hallOfFame_attackID2
+					FOREIGN KEY (attackID2) REFERENCES attack(attackID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION	''')
+
+	cur.execute('''ALTER TABLE hallOfFame ADD CONSTRAINT FK_hallOfFame_attackID3
+					FOREIGN KEY (attackID3) REFERENCES attack(attackID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION	''')
+
+	cur.execute('''ALTER TABLE hallOfFame ADD CONSTRAINT FK_hallOfFame_attackID4
+					FOREIGN KEY (attackID4) REFERENCES attack(attackID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION	''')
+
+	cur.execute('''ALTER TABLE hallOfFame ADD CONSTRAINT FK_hallOfFame_replayID
+					FOREIGN KEY (replayID) REFERENCES replay(replayID)
+					ON DELETE NO ACTION ON UPDATE NO ACTION	''')
 
 	print("[INFO] | Relaciones (foreign keys) establecidas")
 

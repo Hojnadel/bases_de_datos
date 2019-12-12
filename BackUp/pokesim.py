@@ -534,7 +534,49 @@ def load_attacks(cur, mypokemon):
 	mypokemon.load_attacks(pokemon_attack_num, cur, qry_attacks_with_secEffect)
 
 
+def hall_of_fame_entrance(pokemon, replayID, cur, conn):
+
+	if(NUM_ATTACKS == 2):
+		cur.execute('''INSERT INTO hallOfFame (pokemonID, attackID1, attackID2, replayID) 
+	  						VALUES ({},{},{},{});'''.format(pokemon.num, pokemon.att[0].id, pokemon.att[1].id, replayID))
+	conn.commit()
+
+
+def show_hall_of_fame(cur):
+	hof_table = []
+	CLR_SCRN()
+	tprint("Hall   of   Fame")
+	if(NUM_ATTACKS == 2):
+		cur.execute('''SELECT hof.time, pk.name, att1.name, att2.name, replay.replayID 
+						FROM hallOfFame hof 
+						JOIN pokemon pk ON (hof.pokemonID = pk.pokemonID)
+						JOIN attack att1 ON (att1.attackID = hof.attackID1)
+						JOIN attack att2 ON (att2.attackID = hof.attackID2)
+						JOIN replay ON (replay.replayID = hof.replayID)
+						ORDER BY hof.time DESC;''')
+		hof_table = cur.fetchall()
+		print(tabulate(hof_table, headers=['Date', 'Pokemon', 'Attack1', 'Attack2','Replay'], tablefmt='fancy_grid'))
 	
+	elif(NUM_ATTACKS == 4):
+		cur.execute('''SELECT hof.time, pk.name, att1.name, att2.name, replay.replayID 
+						FROM hallOfFame hof 
+						JOIN pokemon pk ON (hof.pokemonID = pk.pokemonID)
+						JOIN attack att1 ON (att1.attackID = hof.attackID1)
+						JOIN attack att2 ON (att2.attackID = hof.attackID2)
+						JOIN attack att3 ON (att2.attackID = hof.attackID3)
+						JOIN attack att4 ON (att2.attackID = hof.attackID4)
+						JOIN replay ON (replay.replayID = hof.replayID)
+						ORDER BY hof.time DESC;''')
+		hof_table = cur.fetchall()
+		print(tabulate(hof_table, headers=['Date', 'Pokemon', 'Attack1', 'Attack2','Attack3', 'Attack4','Replay'], tablefmt='fancy_grid'))
+	
+	
+	
+
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -613,7 +655,7 @@ if __name__ == '__main__':
 
 		input("\nPresione ENTER para continuar con la batalla")
 
-		# Comenzando la pelea
+		#Comenzando la pelea
 		pygame.mixer.music.stop()
 		pygame.mixer.music.load("115 - battle.mp3")
 		pygame.mixer.music.play()
@@ -836,8 +878,10 @@ if __name__ == '__main__':
 		# Anunciando al ganador
 		if(mypokemon.curr_hp<=0):
 			delay_print("{} has fainted!".format(mypokemon.name))
+			hall_of_fame_entrance(otherpokemon, _replayID, cur, conn)
 		else:
 			delay_print("{} has fainted!".format(otherpokemon.name))
+			hall_of_fame_entrance(mypokemon, _replayID, cur, conn)
 		time.sleep(1)
 
 		pygame.mixer.music.stop()
@@ -1019,12 +1063,8 @@ if __name__ == '__main__':
 				elif(delete_replay_opt.lower() == "q"):
 					flag =	True
 
-
-
-
-
-
-
+	elif(op == '4'):
+		show_hall_of_fame(cur)
 
 
 

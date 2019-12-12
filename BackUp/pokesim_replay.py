@@ -146,10 +146,6 @@ class LoadReplayInfo():
 				delay_print(pk_attacking.name," is no more frozen!")
 
 
-
-
-
-
 def create_replay_entrance(cursor, connection):
 	cursor.execute('''INSERT INTO replay (time) 
   						VALUES (CURRENT_TIMESTAMP);''')
@@ -185,22 +181,32 @@ def show_replay_list(cursor):
 
 
 def detele_replay(cursor, connection, rply_num):
+
+	cursor.execute('''UPDATE hallOfFame SET replayID = NULL WHERE replayID = {}'''.format(rply_num))
+	#print("[INFO] | Entradas de hallOfFame con replayID {} borradas".format(rply_num))
+
 	cursor.execute('''DELETE FROM replayInfo WHERE replayID = {}'''.format(rply_num))
 	print("[INFO] | Entradas de replayInfo con replayID {} borradas".format(rply_num))
+
 	cursor.execute('''DELETE FROM replay WHERE replayID = {}'''.format(rply_num))
 	print("[INFO] | Entradas de replay con replayID {} borradas".format(rply_num))
 	connection.commit()
 
 
 def delete_replay_all(cursor, connection):
+
+	cursor.execute('''UPDATE hallOfFame SET replayID = NULL''')
+	#print("[INFO] | Entradas de hallOfFame borradas")
+
 	cursor.execute('''DELETE FROM replayInfo''')
 	print("[INFO] | Entradas de replayInfo borradas")
+
 	cursor.execute('''DELETE FROM replay''')
 	print("[INFO] | Entradas de replay borradas")
 	connection.commit()
 
+
 def replay_pokemon_do_attack(pk_attacking, pk_defending, tur):
-		
 
 		delay_print("{} used {}!\n".format(self.name, self.att[att_index].name))
 
